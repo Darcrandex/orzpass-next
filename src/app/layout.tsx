@@ -1,3 +1,4 @@
+import AntdProvider from "@/lib/AntdProvider";
 import QueryProvider from "@/lib/QueryProvider";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body id="root">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <AntdProvider>{children}</AntdProvider>
+        </QueryProvider>
       </body>
     </html>
   );

@@ -1,8 +1,1 @@
 @import "tailwindcss";
-
-/* form */
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  @apply block w-full p-2 border border-gray-300 rounded-md;
-}

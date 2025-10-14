@@ -1,7 +1,7 @@
 import { updatePassword } from "@/actions/pwd";
 import PasswordForm from "@/components/PasswordForm";
 import { db } from "@/db";
-import { passwords, PasswordUpdateDTO } from "@/db/schema/passwords";
+import { type PasswordUpdateDTO, passwords } from "@/db/schema/passwords";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 

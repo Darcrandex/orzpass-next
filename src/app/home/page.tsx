@@ -4,6 +4,7 @@
 
 import { db } from "@/db";
 import { passwords } from "@/db/schema/passwords";
+import { Button } from "antd";
 import Link from "next/link";
 
 export default async function Home() {
@@ -20,6 +21,8 @@ export default async function Home() {
         >
           Add Password
         </Link>
+
+        <Button>123</Button>
       </header>
 
       <hr className="my-4 border-b border-gray-300" />

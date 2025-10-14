@@ -1,7 +1,9 @@
 "use client";
 
-import { Password, PasswordUpdateDTO } from "@/db/schema/passwords";
 import { useMutation } from "@tanstack/react-query";
+import { Button, Form, Input } from "antd";
+import { useEffect } from "react";
+import type { Password, PasswordUpdateDTO } from "@/db/schema/passwords";
 
 export default function PasswordForm({
   data,
@@ -10,32 +12,42 @@ export default function PasswordForm({
   data: Password;
   updateAction: (values: PasswordUpdateDTO) => Promise<void>;
 }) {
+  const [form] = Form.useForm();
+  useEffect(() => {
+    form.setFieldsValue(data);
+  }, [data, form]);
+
   const submitMutation = useMutation({
     mutationFn: updateAction,
   });
 
   return (
-    <>
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          const password: PasswordUpdateDTO = {
-            id: data.id,
-            uid: data.uid,
-            title: formData.get("title") as string,
-            username: formData.get("username") as string,
-            password: formData.get("password") as string,
-            iv: data.iv,
-          };
-          await submitMutation.mutateAsync(password);
-        }}
-      >
-        <input type="text" name="title" />
-        <input type="text" name="username" />
-        <input type="text" name="password" />
-        <button type="submit">Update</button>
-      </form>
-    </>
+    <div>
+      <Form form={form} onFinish={submitMutation.mutate}>
+        <Form.Item name="id" hidden>
+          <Input readOnly />
+        </Form.Item>
+
+        <Form.Item name="title" label="Title">
+          <Input />
+        </Form.Item>
+
+        <Form.Item name="username" label="Username">
+          <Input />
+        </Form.Item>
+
+        <Form.Item name="password" label="Password">
+          <Input />
+        </Form.Item>
+
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={submitMutation.isPending}
+        >
+          Update
+        </Button>
+      </Form>
+    </div>
   );
 }
