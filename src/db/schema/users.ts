@@ -1,6 +1,6 @@
-import { jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 
-export const users = pgTable("users", {
+export const users = pgTable('users', {
   id: uuid().primaryKey().defaultRandom(),
   email: text().notNull().unique(),
   password: text(),
@@ -9,8 +9,8 @@ export const users = pgTable("users", {
   role: text(),
   config: jsonb().$type<Record<string, any>>().default({}),
 
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow()
+})
 
-export type User = typeof users.$inferSelect;
+export type User = typeof users.$inferSelect

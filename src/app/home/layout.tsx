@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { PropsWithChildren } from "react";
+import Link from 'next/link'
+import { PropsWithChildren } from 'react'
 
 export default function HomeLayout({ children }: PropsWithChildren) {
   return (
@@ -23,5 +23,5 @@ export default function HomeLayout({ children }: PropsWithChildren) {
 
       <main>{children}</main>
     </>
-  );
+  )
 }

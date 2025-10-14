@@ -1,24 +1,24 @@
-import { db } from "@/db";
-import { passwords } from "@/db/schema/passwords";
-import { users } from "@/db/schema/users";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { db } from '@/db'
+import { passwords } from '@/db/schema/passwords'
+import { users } from '@/db/schema/users'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export default async function AddPassword() {
-  const userList = await db.select().from(users);
+  const userList = await db.select().from(users)
 
   // 定义一个服务端函数来处理表单提交
   async function createUser(formData: FormData) {
-    "use server"; // 👈 声明为服务端函数
+    'use server' // 👈 声明为服务端函数
 
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
 
     // 这里可以写数据库逻辑，比如使用 drizzle ORM 保存数据
-    console.log("Saving user:", { name, email });
+    console.log('Saving user:', { name, email })
 
     if (userList.length === 0) {
-      throw new Error("No user found");
+      throw new Error('No user found')
     }
 
     await db.insert(passwords).values({
@@ -26,12 +26,12 @@ export default async function AddPassword() {
       title: name,
       username: email,
       password: `${name}_${email}`,
-      iv: "123123",
-    });
+      iv: '123123'
+    })
 
     // 可选：刷新页面数据或跳转
-    revalidatePath("/home");
-    redirect("/home");
+    revalidatePath('/home')
+    redirect('/home')
   }
 
   return (
@@ -56,5 +56,5 @@ export default async function AddPassword() {
         <button type="submit">提交</button>
       </form>
     </>
-  );
+  )
 }

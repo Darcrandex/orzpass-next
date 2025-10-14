@@ -1,28 +1,27 @@
-"use client";
+'use client'
 
-import { useMutation } from "@tanstack/react-query";
-import { Button, Form, Input } from "antd";
-import { useEffect } from "react";
-import type { Password, PasswordUpdateDTO } from "@/db/schema/passwords";
+import type { Password, PasswordUpdateDTO } from '@/db/schema/passwords'
+import { useMutation } from '@tanstack/react-query'
+import { Button, Form, Input } from 'antd'
+import { useEffect } from 'react'
 
 export default function PasswordForm({
   data,
-  updateAction,
+  updateAction
 }: {
-  data: Password;
-  updateAction: (values: PasswordUpdateDTO) => Promise<void>;
+  data: Password
+  updateAction: (values: PasswordUpdateDTO) => Promise<void>
 }) {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
   useEffect(() => {
-    form.setFieldsValue(data);
-  }, [data, form]);
+    form.setFieldsValue(data)
+  }, [data, form])
 
-  const submitMutation = useMutation({
-    mutationFn: updateAction,
-  });
+  const submitMutation = useMutation({ mutationFn: updateAction })
 
   return (
     <div>
+      <h1 className="mb-4 text-2xl font-bold">Update Password</h1>
       <Form form={form} onFinish={submitMutation.mutate}>
         <Form.Item name="id" hidden>
           <Input readOnly />
@@ -40,14 +39,10 @@ export default function PasswordForm({
           <Input />
         </Form.Item>
 
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={submitMutation.isPending}
-        >
+        <Button type="primary" htmlType="submit" loading={submitMutation.isPending}>
           Update
         </Button>
       </Form>
     </div>
-  );
+  )
 }
