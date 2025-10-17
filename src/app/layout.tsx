@@ -1,3 +1,4 @@
+import ProgressBar from '@/components/ProgressBar'
 import AntdProvider from '@/lib/AntdProvider'
 import QueryProvider from '@/lib/QueryProvider'
 import type { Metadata } from 'next'
@@ -15,9 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body id="root">
+      <body>
         <QueryProvider>
-          <AntdProvider>{children}</AntdProvider>
+          <AntdProvider>
+            <ProgressBar />
+            {children}
+          </AntdProvider>
         </QueryProvider>
       </body>
     </html>

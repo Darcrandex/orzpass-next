@@ -20,5 +20,5 @@ export const passwords = pgTable('passwords', {
 })
 
 export type Password = typeof passwords.$inferSelect
-export type PasswordInsertDTO = typeof passwords.$inferInsert
+export type PasswordInsertDTO = Omit<Password, 'id' | 'createdAt' | 'updatedAt' | 'iv'>
 export type PasswordUpdateDTO = PasswordInsertDTO & { id: Password['id'] }

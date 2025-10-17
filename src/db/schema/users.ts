@@ -14,3 +14,5 @@ export const users = pgTable('users', {
 })
 
 export type User = typeof users.$inferSelect
+export type UserInsertDTO = typeof users.$inferInsert
+export type UserUpdateDTO = UserInsertDTO & { id: User['id'] }

@@ -2,13 +2,12 @@
  * 主面板首页, 也是密码管理页面
  */
 
-import { db } from '@/db'
-import { passwords } from '@/db/schema/passwords'
+import { getUserPasswords } from '@/actions/pwd'
 import { Button } from 'antd'
 import Link from 'next/link'
 
 export default async function Home() {
-  const list = await db.select().from(passwords)
+  const list = await getUserPasswords()
 
   return (
     <div>

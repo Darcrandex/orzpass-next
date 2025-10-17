@@ -1,28 +1,37 @@
-import { updatePassword } from '@/actions/pwd'
+import { getPasswordDetail, removePassword, updatePassword } from '@/actions/pwd'
 import PasswordForm from '@/components/PasswordForm'
-import { db } from '@/db'
-import { type PasswordUpdateDTO, passwords } from '@/db/schema/passwords'
-import { eq } from 'drizzle-orm'
+import PasswordRemove from '@/components/PasswordRemove'
+import { PasswordUpdateDTO } from '@/db/schema/passwords'
+import { Breadcrumb } from 'antd'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export default async function PwdDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [data] = await db.select().from(passwords).where(eq(passwords.id, id))
+  const data = await getPasswordDetail(id)
+
   const updateAction = async (values: PasswordUpdateDTO) => {
     'use server'
     await updatePassword(values)
     revalidatePath(`/home/pwd/${id}`)
   }
 
+  const removeAction = async () => {
+    'use server'
+    await removePassword(id)
+    revalidatePath('/home/pwd')
+    redirect('/home')
+  }
+
   return (
     <>
-      <h1>Password Detail</h1>
-      <p>ID: {id}</p>
+      <Breadcrumb items={[{ title: 'Home' }, { title: 'Passwords' }, { title: 'Detail' }]}></Breadcrumb>
 
-      <pre className="m-4 bg-amber-100">{JSON.stringify(data, null, 2)}</pre>
+      <div className="mx-auto mt-4 w-xl">
+        <PasswordForm data={data} action={updateAction} />
 
-      <hr className="my-4 border-b border-gray-300" />
-      <PasswordForm data={data} updateAction={updateAction} />
+        <PasswordRemove action={removeAction} className="mt-20" />
+      </div>
     </>
   )
 }

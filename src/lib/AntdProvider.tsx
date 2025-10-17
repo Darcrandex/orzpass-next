@@ -12,7 +12,8 @@ export default function AntdProvider(props: PropsWithChildren) {
       <ConfigProvider
         theme={{
           token: {
-            borderRadius: 2
+            borderRadius: 0,
+            colorPrimary: 'rgb(0, 51, 255)'
           }
         }}
       >

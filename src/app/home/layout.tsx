@@ -1,27 +1,14 @@
-import Link from 'next/link'
+import AsideBar from '@/components/AsideBar'
 import { PropsWithChildren } from 'react'
 
-export default function HomeLayout({ children }: PropsWithChildren) {
+export default async function HomeLayout({ children }: PropsWithChildren) {
   return (
     <>
-      <header>
-        <h1>OrzPass</h1>
-      </header>
+      <section className="flex h-screen gap-4 overflow-y-auto p-4">
+        <AsideBar />
 
-      <aside>
-        <nav>
-          <ul>
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/login">Login</Link>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-
-      <main>{children}</main>
+        <main className="scrollbar-none flex-1 overflow-y-auto rounded-3xl border border-gray-200 p-8">{children}</main>
+      </section>
     </>
   )
 }

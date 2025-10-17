@@ -1,55 +1,66 @@
-import { db } from '@/db'
-import { users } from '@/db/schema/users'
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { createUser } from '@/actions/auth'
+import { UserInsertDTO } from '@/db/schema/users'
+import { useMutation } from '@tanstack/react-query'
+import { App, Button, Form, Input } from 'antd'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function Register() {
-  const handleSubmit = async (formData: FormData) => {
-    'use server' // 👈 声明为服务端函数
+  const [form] = Form.useForm()
+  const { message } = App.useApp()
+  const router = useRouter()
 
-    const name = formData.get('name')
-    const email = formData.get('email')
-    const password = formData.get('password')
+  const submit = useMutation({
+    mutationFn: async (values: UserInsertDTO) => {
+      const { nicname } = values
+      await createUser({ ...values, nicname: nicname || `user ${Date.now()}` })
+    },
 
-    await db.insert(users).values({
-      nicname: name as string,
-      email: email as string,
-      password: password as string
-    })
+    onSuccess: () => {
+      router.push('/login')
+    },
 
-    // 可选：刷新页面数据或跳转
-    revalidatePath('/home')
-    redirect('/home')
-  }
+    onError(error) {
+      message.error(error.message)
+    }
+  })
 
   return (
-    <>
-      <h1 className="m-4 text-center">Register</h1>
+    <section className="flex h-screen items-center justify-center">
+      <div className="w-xl rounded-lg bg-white p-4 shadow-xl">
+        <Form form={form} onFinish={submit.mutate} layout="vertical">
+          <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Please input your email!' }]}>
+            <Input maxLength={30} placeholder="Enter your email" />
+          </Form.Item>
 
-      <form className="m-4" action={handleSubmit}>
-        <div>
-          <label>
-            Name:
-            <input type="text" name="name" required />
-          </label>
-        </div>
-        <div>
-          <label>
-            Email:
-            <input type="email" name="email" required />
-          </label>
-        </div>
-        <div>
-          <label>
-            Password:
-            <input type="password" name="password" required />
-          </label>
-        </div>
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password maxLength={30} placeholder="Enter your password" />
+          </Form.Item>
 
-        <div>
-          <button type="submit">Register</button>
-        </div>
-      </form>
-    </>
+          <Form.Item name="nicname" label="Nickname">
+            <Input maxLength={30} placeholder="Enter your nickname" />
+          </Form.Item>
+
+          <Button type="primary" htmlType="submit" block loading={submit.isPending}>
+            Register
+          </Button>
+        </Form>
+
+        <footer className="my-4 text-center">
+          <p>
+            Already have an account?
+            <Link href="/login" className="mx-2 text-blue-600 underline">
+              Login
+            </Link>
+          </p>
+        </footer>
+      </div>
+    </section>
   )
 }
