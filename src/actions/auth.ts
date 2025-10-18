@@ -1,10 +1,10 @@
 'use server'
 
 import { db } from '@/db'
-import { users, UserUpdateDTO, type UserInsertDTO } from '@/db/schema/users'
+import { User, users, type UserInsertDTO } from '@/db/schema/users'
 import { hashContent, verifyContent } from '@/utils/hash.server'
 import { eq } from 'drizzle-orm'
-import { delay, omit } from 'es-toolkit'
+import { delay } from 'es-toolkit'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -37,18 +37,39 @@ export async function loginUser(email: string, password: string) {
   cookieStore.set('token', token)
 }
 
-export async function updateUser(user: UserUpdateDTO) {
+export async function updateUser(user: Pick<User, 'id' | 'nickname' | 'email'>) {
   await db.update(users).set(user).where(eq(users.id, user.id))
 }
 
 export async function sendResetPasswordEmail(email: string) {
   await delay(1000)
   console.log('send reset password email to', email)
+
+  const sign = Math.random().toString(36).substring(2, 10)
+  return sign
 }
 
-export async function resetPassword(token: string, password: string) {
-  await delay(1000)
-  console.log('reset password with token', token, 'to', password)
+export async function resetPassword(sign: string, newPassword: string) {
+  const currentUser = await getUserInfo()
+
+  if (!sign) {
+    throw new Error('Invalid token')
+  }
+
+  const hashedPassword = await hashContent(newPassword || '')
+  await db.update(users).set({ password: hashedPassword }).where(eq(users.id, currentUser.id))
+}
+
+export async function updateUserPassword(values: { oldPassword: string; newPassword: string }) {
+  const currentUser = await getUserInfo()
+
+  const isPasswordCorrect = await verifyContent(values.oldPassword, currentUser.password || '')
+  if (!isPasswordCorrect) {
+    throw new Error('Incorrect password')
+  }
+
+  const hashedPassword = await hashContent(values.newPassword || '')
+  await db.update(users).set({ password: hashedPassword }).where(eq(users.id, currentUser.id))
 }
 
 export async function getUserInfo() {
@@ -56,7 +77,7 @@ export async function getUserInfo() {
     const cookieStore = await cookies()
     const uid = cookieStore.get('token')?.value || ''
     const [user] = await db.select().from(users).where(eq(users.id, uid))
-    return omit(user, ['password'])
+    return user
   } catch (error) {
     console.log('get user info error', error)
     redirect('/login')

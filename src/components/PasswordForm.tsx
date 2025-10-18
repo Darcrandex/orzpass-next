@@ -13,7 +13,7 @@ const getHostname = (website?: string | null) => {
   if (isNil(website) || isEmpty(website)) return ''
 
   try {
-    const url = new URL(website)
+    const url = new URL(website.startsWith('http') ? website : `https://${website}`)
     return url.hostname
   } catch (error) {
     console.log('error', error)

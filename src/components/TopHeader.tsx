@@ -16,7 +16,7 @@ export default function TopHeader(props: { user: Omit<User, 'password'> }) {
       <h1>OrzPass</h1>
 
       <Dropdown menu={{ items }}>
-        <span>{props.user.nicname}</span>
+        <span>{props.user.nickname}</span>
       </Dropdown>
     </header>
   )

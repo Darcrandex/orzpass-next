@@ -16,7 +16,7 @@ CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" text NOT NULL,
 	"password" text,
-	"nicname" text,
+	"nickname" text,
 	"avatar" text,
 	"role" text,
 	"config" jsonb DEFAULT '{}'::jsonb,

@@ -1,5 +1,5 @@
 {
-  "id": "58992542-a6cf-4151-a481-568516139816",
+  "id": "d4382e43-de4f-4566-b720-e1da024d0e31",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -124,8 +124,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "nicname": {
-          "name": "nicname",
+        "nickname": {
+          "name": "nickname",
           "type": "text",
           "primaryKey": false,
           "notNull": false

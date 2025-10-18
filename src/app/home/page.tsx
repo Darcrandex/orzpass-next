@@ -3,36 +3,17 @@
  */
 
 import { getUserPasswords } from '@/actions/pwd'
-import { Button } from 'antd'
-import Link from 'next/link'
+import ItemList from '@/components/ItemList'
+import { Breadcrumb } from 'antd'
 
 export default async function Home() {
   const list = await getUserPasswords()
 
   return (
-    <div>
-      <h1>password manager</h1>
+    <>
+      <Breadcrumb items={[{ title: 'Home' }, { title: 'Passwords' }]} />
 
-      <header className="m-4">
-        <Link href="/home/pwd/add" className="rounded-md border border-blue-500 px-2 py-1 text-blue-500">
-          Add Password
-        </Link>
-
-        <Button>123</Button>
-      </header>
-
-      <hr className="my-4 border-b border-gray-300" />
-
-      <ul className="m-4 rounded-md bg-amber-100 p-4">
-        {list.map((item) => (
-          <li key={item.id}>
-            <p>{item.title}</p>
-            <Link href={`/home/pwd/${item.id}`} className="rounded-md border border-blue-500 px-2 py-1 text-blue-500">
-              Detail
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <ItemList data={list} />
+    </>
   )
 }

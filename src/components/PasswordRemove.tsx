@@ -1,7 +1,7 @@
 'use client'
 
 import { cls } from '@/utils/cls'
-import { Button, Card, Modal } from 'antd'
+import { Button, Modal } from 'antd'
 import { useState } from 'react'
 
 export default function PasswordRemove(props: { action: () => Promise<void>; className?: string }) {
@@ -9,14 +9,17 @@ export default function PasswordRemove(props: { action: () => Promise<void>; cla
 
   return (
     <>
-      <div className={cls(props.className)}>
-        <Card
-          title="Delete this password"
-          variant="borderless"
-          extra={<Button onClick={() => setVisible(true)}>DELETE</Button>}
-        >
+      <div className={cls('rounded-md border border-gray-200 shadow', props.className)}>
+        <header className="flex items-center justify-between p-4">
+          <h2 className="text-lg font-bold text-gray-800">Delete this password</h2>
+          <Button onClick={() => setVisible(true)}>DELETE</Button>
+        </header>
+
+        <hr className="my-2 border-gray-200" />
+
+        <p className="p-4 text-sm text-gray-600">
           Once you delete a password, there is no going back. Please be certain.
-        </Card>
+        </p>
       </div>
 
       <Modal
