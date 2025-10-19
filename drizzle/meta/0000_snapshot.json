@@ -1,5 +1,5 @@
 {
-  "id": "d4382e43-de4f-4566-b720-e1da024d0e31",
+  "id": "43875f11-dcf7-4417-8951-8c461d2b71d4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -148,6 +148,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'{}'::jsonb"
+        },
+        "master_key": {
+          "name": "master_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
         },
         "created_at": {
           "name": "created_at",

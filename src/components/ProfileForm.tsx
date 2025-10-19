@@ -1,7 +1,7 @@
 'use client'
 
 import { User } from '@/db/schema/users'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { App, Button, Form, Input } from 'antd'
 import { isNotNil } from 'es-toolkit'
 import { useEffect } from 'react'
@@ -13,6 +13,7 @@ export default function ProfileForm({
   data?: Omit<User, 'password'>
   action: (values: Pick<User, 'id' | 'nickname' | 'email'>) => Promise<void>
 }) {
+  const queryClient = useQueryClient()
   const { message } = App.useApp()
   const [form] = Form.useForm()
 
@@ -28,6 +29,7 @@ export default function ProfileForm({
     },
     onSuccess() {
       message.success('success')
+      queryClient.invalidateQueries({ queryKey: ['user', 'info'] })
     },
     onError(error) {
       message.error(error.message)

@@ -1,18 +1,29 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
-import { Button, Form, Input } from 'antd'
+import { App, Button, Form, Input } from 'antd'
+import { useRouter } from 'next/navigation'
 
 export default function UserPasswordForm({
   action
 }: {
   action: (values: { oldPassword: string; newPassword: string }) => Promise<void>
 }) {
+  const router = useRouter()
+  const { message } = App.useApp()
+
   const [form] = Form.useForm()
 
   const submit = useMutation({
     mutationFn: async (values: { oldPassword: string; newPassword: string; confirmPassword: string }) => {
       await action({ oldPassword: values.oldPassword, newPassword: values.newPassword })
+    },
+    onSuccess() {
+      message.success('success')
+      router.push('/login')
+    },
+    onError(error) {
+      message.error(error.message)
     }
   })
 

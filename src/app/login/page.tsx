@@ -1,15 +1,16 @@
 'use client'
 
-import { loginUser } from '@/actions/auth'
-import { useMutation } from '@tanstack/react-query'
+import { loginUser } from '@/actions/user'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { App, Button, Form, Input } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 export default function Login() {
+  const queryClient = useQueryClient()
+  const router = useRouter()
   const [form] = Form.useForm()
   const { message } = App.useApp()
-  const router = useRouter()
 
   const submit = useMutation({
     mutationFn: async (values: { email: string; password: string }) => {
@@ -17,6 +18,7 @@ export default function Login() {
     },
 
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] })
       router.push('/')
     },
 

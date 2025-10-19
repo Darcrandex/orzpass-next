@@ -1,6 +1,6 @@
 'use client'
 
-import { createUser } from '@/actions/auth'
+import { registerUser } from '@/actions/user'
 import { UserInsertDTO } from '@/db/schema/users'
 import { useMutation } from '@tanstack/react-query'
 import { App, Button, Form, Input } from 'antd'
@@ -15,7 +15,7 @@ export default function Register() {
   const submit = useMutation({
     mutationFn: async (values: UserInsertDTO) => {
       const { nickname } = values
-      await createUser({ ...values, nickname: nickname || `user ${Date.now()}` })
+      await registerUser({ ...values, nickname: nickname || `user ${Date.now()}` })
     },
 
     onSuccess: () => {

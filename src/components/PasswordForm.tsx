@@ -1,11 +1,13 @@
 'use client'
 
-import type { Password, PasswordUpdateDTO } from '@/db/schema/passwords'
+import { createItem, getItemById, updateItem } from '@/actions/items'
+import type { PasswordUpdateDTO } from '@/db/schema/passwords'
 import { generatePassword } from '@/utils/gen-password'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { App, Button, Flex, Form, Input } from 'antd'
 import { isNil, isNotNil } from 'es-toolkit'
 import { isEmpty } from 'es-toolkit/compat'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 import CopyButton from './CopyButton'
 
@@ -21,16 +23,13 @@ const getHostname = (website?: string | null) => {
   }
 }
 
-export default function PasswordForm({
-  data,
-  action
-}: {
-  data?: Partial<Password>
-  action: (values: PasswordUpdateDTO) => Promise<void>
-}) {
+export default function PasswordForm(props: { id?: string }) {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
   const { message } = App.useApp()
   const [form] = Form.useForm()
-  const isEdit = isNotNil(data?.id)
+  const isEdit = isNotNil(props?.id)
 
   const username = Form.useWatch('username', form)
   const password = Form.useWatch('password', form)
@@ -39,6 +38,14 @@ export default function PasswordForm({
   const websiteUrl = useMemo(() => {
     return getHostname(website)
   }, [website])
+
+  const { data } = useQuery({
+    enabled: isEdit,
+    queryKey: ['password', props.id],
+    queryFn: async () => {
+      return getItemById(props.id!)
+    }
+  })
 
   useEffect(() => {
     if (isNotNil(data)) {
@@ -54,10 +61,26 @@ export default function PasswordForm({
   const submitMutation = useMutation({
     mutationFn: async (values: PasswordUpdateDTO) => {
       const { website, ...rest } = values
-      await action({ ...rest, website: getHostname(website) })
+      const data = { ...rest, website: getHostname(website) }
+
+      let id = props.id
+      if (isEdit) {
+        await updateItem(data)
+      } else {
+        const createdId = await createItem(data)
+        id = createdId
+      }
+
+      return { isEdit, id }
     },
-    onSuccess() {
-      message.success('Success')
+    onSuccess({ isEdit }) {
+      queryClient.invalidateQueries({ queryKey: ['password'] })
+      if (isEdit) {
+        message.success('update success')
+      } else {
+        message.success('add success')
+        router.push('/')
+      }
     }
   })
 

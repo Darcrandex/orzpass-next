@@ -1,11 +1,28 @@
 'use client'
 
+import { removeItem } from '@/actions/items'
 import { cls } from '@/utils/cls'
-import { Button, Modal } from 'antd'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { App, Button, Modal } from 'antd'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export default function PasswordRemove(props: { action: () => Promise<void>; className?: string }) {
+export default function PasswordRemove(props: { id: string; className?: string }) {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+  const { message } = App.useApp()
   const [visible, setVisible] = useState(false)
+
+  const removeMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await removeItem(id)
+    },
+    onSuccess: () => {
+      message.success('remove success')
+      queryClient.invalidateQueries({ queryKey: ['password'] })
+      router.replace('/')
+    }
+  })
 
   return (
     <>
@@ -27,8 +44,9 @@ export default function PasswordRemove(props: { action: () => Promise<void>; cla
         open={visible}
         okText="DELETE"
         okType="danger"
-        onOk={async () => props.action()}
+        onOk={async () => removeMutation.mutate(props.id)}
         onCancel={() => setVisible(false)}
+        okButtonProps={{ loading: removeMutation.isPending }}
       >
         Are you sure you want to delete this password?
       </Modal>

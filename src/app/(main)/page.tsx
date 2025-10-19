@@ -1,30 +1,46 @@
 'use client'
 
+import { getItems } from '@/actions/items'
+import CardItem from '@/components/CardItem'
 import { Password } from '@/db/schema/passwords'
-import { Button, Input } from 'antd'
+import { useQuery } from '@tanstack/react-query'
+import { Breadcrumb, Button, Input } from 'antd'
+import { isNil } from 'es-toolkit'
 import Link from 'next/link'
 import { useDeferredValue, useMemo, useState } from 'react'
-import CardItem from './CardItem'
 
-export default function ItemList(props: { data: Omit<Password, 'password' | 'iv'>[] }) {
+export default function ListPage() {
   const [text, setText] = useState('')
   const keyword = useDeferredValue(text)
 
+  const { data: items } = useQuery({
+    queryKey: ['passwords'],
+    queryFn: async () => {
+      return getItems()
+    }
+  })
+
   const list = useMemo(() => {
+    if (isNil(items)) {
+      return []
+    }
+
     const matchFields = ['title', 'username', 'website']
-    return props.data.filter((item) =>
+    return items?.filter((item) =>
       matchFields.some((field) => {
         const value = item[field as keyof Omit<Password, 'password' | 'iv'>] as string
         return value?.toLowerCase().includes(keyword)
       })
     )
-  }, [props.data, keyword])
+  }, [items, keyword])
 
   return (
     <>
+      <Breadcrumb items={[{ title: 'Home' }, { title: 'Passwords' }]} />
+
       <header className="mt-4 flex w-xl gap-2">
         <Input placeholder="Search" value={text} onChange={(e) => setText(e.target.value)} maxLength={30} allowClear />
-        <Link href="/home/pwd/add">
+        <Link href="/pwd/add">
           <Button>Add</Button>
         </Link>
       </header>
@@ -36,15 +52,6 @@ export default function ItemList(props: { data: Omit<Password, 'password' | 'iv'
           </li>
         ))}
       </ul>
-
-      {props.data.length === 0 && (
-        <p className="mt-8 text-center text-sm text-gray-500">
-          <span className="text-sm text-gray-500">No items found</span>
-          <Link href="/home/pwd/add">
-            <Button type="link">Add a new item</Button>
-          </Link>
-        </p>
-      )}
     </>
   )
 }
