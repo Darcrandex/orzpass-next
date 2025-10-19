@@ -9,7 +9,7 @@ export default function AsideBar({ user }: { user: Omit<User, 'password'> }) {
       title: 'Home',
       path: '/home',
       icon: <House className="w-5" />,
-      matches: ['/home', '/home/pwd/add']
+      matches: ['/home', '/home/pwd/add', '/home/pwd/:id']
     },
     { title: 'Profile', path: '/home/profile', icon: <UserRoundPen className="w-5" />, matches: ['/home/profile'] }
   ]

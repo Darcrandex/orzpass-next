@@ -43,6 +43,12 @@ export default function Login() {
             <Input.Password maxLength={30} placeholder="Enter your password" />
           </Form.Item>
 
+          <p className="text-primary my-4 text-right text-sm">
+            <Link href="/forgot-password" className="text-blue-600 underline">
+              Forgot password?
+            </Link>
+          </p>
+
           <Button type="primary" htmlType="submit" block loading={submit.isPending}>
             Login
           </Button>

@@ -46,7 +46,7 @@ export async function sendResetPasswordEmail(email: string) {
   console.log('send reset password email to', email)
 
   const sign = Math.random().toString(36).substring(2, 10)
-  return sign
+  console.log('邮箱将收到一个包含', sign, '的重置密码链接')
 }
 
 export async function resetPassword(sign: string, newPassword: string) {
