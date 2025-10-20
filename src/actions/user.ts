@@ -8,7 +8,10 @@ import { eq } from 'drizzle-orm'
 import { omit } from 'es-toolkit'
 import jwt from 'jsonwebtoken'
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function registerUser(user: UserInsertDTO) {
   const existingUser = await db.select().from(users).where(eq(users.email, user.email))
@@ -36,7 +39,7 @@ export async function loginUser(email: string, password: string) {
       throw new Error('Incorrect password')
     }
 
-    const token = jwt.sign({ uid: user.id, email }, process.env.JWT_SECRET || '', { expiresIn: '1h' })
+    const token = jwt.sign({ uid: user.id, email }, process.env.JWT_SECRET || '', { expiresIn: '1d' })
     const cookieStore = await cookies()
     cookieStore.set('token', token)
     revalidatePath('/')
@@ -93,4 +96,52 @@ export async function updateUserPassword(values: { oldPassword: string; newPassw
 
   const cookieStore = await cookies()
   cookieStore.delete('token')
+}
+
+export async function sendResetPasswordEmail(email: string) {
+  const sign = jwt.sign({ email }, process.env.JWT_SECRET || '', { expiresIn: '1h' })
+
+  const headerList = await headers()
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https'
+  const host = headerList.get('host')
+  const baseUrl = `${protocol}://${host}`
+  const resetUrl = `${baseUrl}/reset-password?sign=${sign}`
+
+  const { error } = await resend.emails.send({
+    from: 'orzpass <onboarding@resend.dev>',
+    to: [email],
+    subject: 'Hello world',
+    html: `
+      <p>reset your password by clicking the link below:</p>
+      <a href="${resetUrl}">Reset Password</a>
+    `
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+}
+
+export async function resetPassword(sign: string, newPassword: string) {
+  try {
+    const decoded = jwt.verify(sign, process.env.JWT_SECRET || '') as { email: string }
+
+    const [user] = await db.select().from(users).where(eq(users.email, decoded.email))
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const hashedPassword = await hashContent(newPassword || '')
+    await db.update(users).set({ password: hashedPassword }).where(eq(users.id, user.id))
+
+    const cookieStore = await cookies()
+    cookieStore.delete('token')
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message)
+    } else {
+      throw new Error('Reset password failed')
+    }
+  }
 }
