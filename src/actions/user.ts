@@ -1,9 +1,11 @@
 'use server'
 
+import ResetPasswordEmail from '@/components/ResetPasswordEmail'
 import { db } from '@/db'
 import { User, UserInsertDTO, users } from '@/db/schema/users'
 import { generatePassword } from '@/utils/gen-password'
 import { hashContent, verifyContent } from '@/utils/hash.server'
+import { render } from '@react-email/render'
 import { eq } from 'drizzle-orm'
 import { omit } from 'es-toolkit'
 import jwt from 'jsonwebtoken'
@@ -110,11 +112,8 @@ export async function sendResetPasswordEmail(email: string) {
   const { error } = await resend.emails.send({
     from: 'orzpass <onboarding@resend.dev>',
     to: [email],
-    subject: 'Hello world',
-    html: `
-      <p>reset your password by clicking the link below:</p>
-      <a href="${resetUrl}">Reset Password</a>
-    `
+    subject: 'Reset Password',
+    html: await render(ResetPasswordEmail({ resetUrl }))
   })
 
   if (error) {

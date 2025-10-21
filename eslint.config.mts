@@ -26,7 +26,10 @@ export default defineConfig([
     rules: {
       'react/jsx-uses-react': 'off',
       'react/react-in-jsx-scope': 'off',
-      '@typescript-eslint/no-explicit-any': 'off'
+      '@typescript-eslint/no-explicit-any': 'off',
+
+      // 忽略 style 标签的 jsx 未知属性
+      'react/no-unknown-property': [2, { ignore: ['jsx'] }]
     }
   }
 

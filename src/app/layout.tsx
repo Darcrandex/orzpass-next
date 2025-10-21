@@ -2,6 +2,7 @@ import ProgressBar from '@/components/ProgressBar'
 import AntdProvider from '@/lib/AntdProvider'
 import QueryProvider from '@/lib/QueryProvider'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,7 +21,8 @@ export default function RootLayout({
         <QueryProvider>
           <AntdProvider>
             <ProgressBar />
-            {children}
+
+            <Suspense fallback={null}>{children}</Suspense>
           </AntdProvider>
         </QueryProvider>
       </body>
