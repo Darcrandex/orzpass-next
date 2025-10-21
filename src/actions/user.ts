@@ -54,7 +54,7 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-export async function getUserInfo(excludePassword = true) {
+export async function getUserInfo(isAllFields = true) {
   const cookieStore = await cookies()
   const token = cookieStore.get('token')?.value
 
@@ -70,7 +70,7 @@ export async function getUserInfo(excludePassword = true) {
       throw new Error('User not found')
     }
 
-    return omit(user, excludePassword ? ['password'] : [])
+    return omit(user, isAllFields ? [] : ['password', 'masterKey'])
   } catch (error) {
     if (error instanceof Error) {
       throw new Error('Invalid token')
@@ -88,7 +88,7 @@ export async function updateUser(user: Pick<User, 'id' | 'nickname' | 'email'>) 
 }
 
 export async function updateUserPassword(values: { oldPassword: string; newPassword: string }) {
-  const currentUser = (await getUserInfo(false)) as User
+  const currentUser = (await getUserInfo(true)) as User
 
   const isPasswordCorrect = await verifyContent(values.oldPassword, currentUser.password || '')
   if (!isPasswordCorrect) {

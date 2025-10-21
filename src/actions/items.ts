@@ -2,6 +2,7 @@
 
 import { db } from '@/db'
 import { PasswordInsertDTO, passwords, PasswordUpdateDTO } from '@/db/schema/passwords'
+import { User } from '@/db/schema/users'
 import { aesDecrypt, aesEncrypt } from '@/utils/aes-encrypt.server'
 import { and, desc, eq, getTableColumns } from 'drizzle-orm'
 import { omit } from 'es-toolkit'
@@ -25,7 +26,7 @@ export async function getItems() {
 }
 
 export async function getItemById(id: string) {
-  const currentUser = await getUserInfo()
+  const currentUser = (await getUserInfo(true)) as User
   if (!currentUser) {
     throw new Error('User not found')
   }
@@ -45,7 +46,7 @@ export async function getItemById(id: string) {
 }
 
 export async function createItem(data: PasswordInsertDTO) {
-  const currentUser = await getUserInfo()
+  const currentUser = (await getUserInfo(true)) as User
   if (!currentUser) {
     throw new Error('User not found')
   }
@@ -68,7 +69,7 @@ export async function createItem(data: PasswordInsertDTO) {
 }
 
 export async function updateItem(data: PasswordUpdateDTO) {
-  const currentUser = await getUserInfo()
+  const currentUser = (await getUserInfo(true)) as User
   if (!currentUser) {
     throw new Error('User not found')
   }
