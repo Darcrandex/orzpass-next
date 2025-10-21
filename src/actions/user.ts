@@ -47,6 +47,8 @@ export async function loginUser(email: string, password: string) {
     revalidatePath('/')
   } catch (error) {
     if (error instanceof Error) {
+      throw new Error(error.message)
+    } else {
       throw new Error('Login failed')
     }
   }
