@@ -3,7 +3,7 @@
 import { db } from '@/db'
 import { PasswordInsertDTO, passwords, PasswordUpdateDTO } from '@/db/schema/passwords'
 import { aesDecrypt, aesEncrypt } from '@/utils/aes-encrypt.server'
-import { and, eq, getTableColumns } from 'drizzle-orm'
+import { and, desc, eq, getTableColumns } from 'drizzle-orm'
 import { omit } from 'es-toolkit'
 import { getUserInfo } from './user'
 
@@ -16,7 +16,11 @@ export async function getItems() {
   }
 
   const cols = omit(getTableColumns(passwords), ['password', 'iv'])
-  const res = await db.select(cols).from(passwords).where(eq(passwords.uid, currentUser.id))
+  const res = await db
+    .select(cols)
+    .from(passwords)
+    .where(eq(passwords.uid, currentUser.id))
+    .orderBy(desc(passwords.updatedAt))
   return res
 }
 

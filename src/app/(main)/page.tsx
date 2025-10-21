@@ -41,11 +41,11 @@ export default function ListPage() {
       <header className="mt-4 flex w-xl gap-2">
         <Input placeholder="Search" value={text} onChange={(e) => setText(e.target.value)} maxLength={30} allowClear />
         <Link href="/pwd/add">
-          <Button>Add</Button>
+          <Button type="primary">Add</Button>
         </Link>
       </header>
 
-      <ul className="mt-4 grid gap-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+      <ul className="mt-4 grid gap-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
         {list.map((item) => (
           <li key={item.id}>
             <CardItem data={item} />
