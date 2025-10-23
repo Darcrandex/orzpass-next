@@ -1,6 +1,7 @@
 'use client'
 
 import { resetPassword } from '@/actions/user'
+import FullPageContainer from '@/components/FullPageContainer'
 import { useMutation } from '@tanstack/react-query'
 import { App, Button, Form, Input } from 'antd'
 import Link from 'next/link'
@@ -29,9 +30,9 @@ export default function ResetPassword() {
   })
 
   return (
-    <section className="from-primary flex h-screen items-center justify-center bg-linear-180 to-white">
-      <div className="w-xl bg-white p-4 shadow-xl">
-        <h1 className="text-primary mb-8 text-center text-3xl font-bold italic">Reset Password</h1>
+    <FullPageContainer>
+      <div className="w-xl bg-white p-8 shadow-xl">
+        <h1 className="ui-font-nordminne-script text-primary mb-8 text-center text-5xl font-bold">Reset Password</h1>
 
         <Form layout="vertical" onFinish={submit.mutate}>
           <Form.Item
@@ -78,6 +79,6 @@ export default function ResetPassword() {
           </p>
         </footer>
       </div>
-    </section>
+    </FullPageContainer>
   )
 }

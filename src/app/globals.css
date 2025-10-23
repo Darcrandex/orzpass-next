@@ -5,3 +5,13 @@
 @theme {
   --color-primary: rgb(0, 51, 255);
 }
+
+/* 自定义字体 */
+@font-face {
+  font-family: 'NordminneScript';
+  src: url('/fonts/NordminneScript.otf') format('opentype');
+}
+
+.ui-font-nordminne-script {
+  font-family: 'NordminneScript', sans-serif;
+}

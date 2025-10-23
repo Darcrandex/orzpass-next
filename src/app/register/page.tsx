@@ -1,6 +1,7 @@
 'use client'
 
 import { registerUser } from '@/actions/user'
+import FullPageContainer from '@/components/FullPageContainer'
 import { UserInsertDTO } from '@/db/schema/users'
 import { useMutation } from '@tanstack/react-query'
 import { App, Button, Form, Input } from 'antd'
@@ -28,9 +29,11 @@ export default function Register() {
   })
 
   return (
-    <section className="from-primary flex h-screen items-center justify-center bg-linear-180 to-white">
-      <div className="w-xl bg-white p-4 shadow-xl">
-        <h1 className="text-primary mb-8 text-center text-3xl font-bold italic">register to orzpass</h1>
+    <FullPageContainer>
+      <div className="w-xl bg-white p-8 shadow-xl">
+        <h1 className="ui-font-nordminne-script text-primary mb-8 text-center text-5xl font-bold">
+          Register To Orzpass
+        </h1>
 
         <Form form={form} onFinish={submit.mutate} layout="vertical">
           <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Please input your email!' }]}>
@@ -63,6 +66,6 @@ export default function Register() {
           </p>
         </footer>
       </div>
-    </section>
+    </FullPageContainer>
   )
 }

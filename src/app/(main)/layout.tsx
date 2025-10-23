@@ -35,7 +35,7 @@ export default function HomeLayout({ children }: PropsWithChildren) {
     <>
       <section className="flex h-screen gap-4 overflow-y-auto p-4">
         <aside className="flex w-48 shrink-0 flex-col rounded-3xl border border-gray-200 bg-gray-50 p-4">
-          <h1 className="text-primary text-center text-4xl font-bold italic">orzpass</h1>
+          <h1 className="ui-font-nordminne-script text-primary text-center text-5xl font-extrabold">Orzpass</h1>
 
           <div className="mt-12 mb-4 flex flex-col items-center justify-center gap-2">
             <Avatar size={80} src={user?.avatar}>
