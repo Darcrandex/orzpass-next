@@ -10,7 +10,7 @@ export default function ProfileForm({
   data,
   action
 }: {
-  data?: Omit<User, 'password'>
+  data?: Omit<User, 'password' | 'masterKey'>
   action: (values: Pick<User, 'id' | 'nickname' | 'email'>) => Promise<void>
 }) {
   const queryClient = useQueryClient()

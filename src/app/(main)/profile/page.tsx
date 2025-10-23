@@ -1,6 +1,7 @@
 'use client'
 
 import { getUserInfo, updateUser, updateUserPassword } from '@/actions/user'
+import AvatarForm from '@/components/AvatarForm'
 import ProfileForm from '@/components/ProfileForm'
 import UserPasswordForm from '@/components/UserPasswordForm'
 import { useQuery } from '@tanstack/react-query'
@@ -22,7 +23,9 @@ export default function Profile() {
       <Breadcrumb items={[{ title: 'Home' }, { title: 'Profile' }]} />
 
       <div className="mx-auto mt-4 w-xl">
-        <h2 className="mb-8 text-2xl font-bold">Base Info</h2>
+        <AvatarForm url={user.avatar} />
+
+        <h2 className="my-8 text-2xl font-bold">Base Info</h2>
         <ProfileForm data={user} action={updateUser} />
 
         <h2 className="mt-20 mb-8 text-2xl font-bold">Update Password</h2>

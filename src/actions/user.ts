@@ -78,7 +78,7 @@ export async function getUserInfo(isAllFields = true) {
   }
 }
 
-export async function updateUser(user: Pick<User, 'id' | 'nickname' | 'email'>) {
+export async function updateUser(user: Partial<Pick<User, 'nickname' | 'email' | 'avatar'>>) {
   const currentUser = await getUserInfo()
   if (!currentUser) {
     throw new Error('User not found')

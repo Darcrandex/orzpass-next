@@ -38,7 +38,9 @@ export default function HomeLayout({ children }: PropsWithChildren) {
           <h1 className="text-primary text-center text-4xl font-bold italic">orzpass</h1>
 
           <div className="mt-12 mb-4 flex flex-col items-center justify-center gap-2">
-            <Avatar size={80}>{user?.nickname?.slice(0, 1)}</Avatar>
+            <Avatar size={80} src={user?.avatar}>
+              {user?.nickname?.slice(0, 1)}
+            </Avatar>
             <p className="text-center">
               <span>{user?.nickname}</span>
             </p>
