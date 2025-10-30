@@ -84,7 +84,8 @@ export async function updateUser(user: Partial<Pick<User, 'nickname' | 'email' |
     throw new Error('User not found')
   }
 
-  await db.update(users).set(user).where(eq(users.id, currentUser.id))
+  const updated = { ...user, updatedAt: new Date() }
+  await db.update(users).set(updated).where(eq(users.id, currentUser.id))
 }
 
 export async function updateUserPassword(values: { oldPassword: string; newPassword: string }) {
@@ -96,7 +97,7 @@ export async function updateUserPassword(values: { oldPassword: string; newPassw
   }
 
   const hashedPassword = await hashContent(values.newPassword || '')
-  await db.update(users).set({ password: hashedPassword }).where(eq(users.id, currentUser.id))
+  await db.update(users).set({ password: hashedPassword, updatedAt: new Date() }).where(eq(users.id, currentUser.id))
 
   const cookieStore = await cookies()
   cookieStore.delete('token')
@@ -134,7 +135,7 @@ export async function resetPassword(sign: string, newPassword: string) {
     }
 
     const hashedPassword = await hashContent(newPassword || '')
-    await db.update(users).set({ password: hashedPassword }).where(eq(users.id, user.id))
+    await db.update(users).set({ password: hashedPassword, updatedAt: new Date() }).where(eq(users.id, user.id))
 
     const cookieStore = await cookies()
     cookieStore.delete('token')

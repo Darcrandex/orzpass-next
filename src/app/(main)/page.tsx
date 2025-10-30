@@ -15,9 +15,7 @@ export default function ListPage() {
 
   const { data: items } = useQuery({
     queryKey: ['passwords'],
-    queryFn: async () => {
-      return getItems()
-    }
+    queryFn: () => getItems()
   })
 
   const list = useMemo(() => {
