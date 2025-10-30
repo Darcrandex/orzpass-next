@@ -2,6 +2,7 @@
 
 import { getItems } from '@/actions/items'
 import CardItem from '@/components/CardItem'
+import LoadingView from '@/components/LoadingView'
 import { Password } from '@/db/schema/passwords'
 import { useQuery } from '@tanstack/react-query'
 import { Breadcrumb, Button, Input } from 'antd'
@@ -13,7 +14,7 @@ export default function ListPage() {
   const [text, setText] = useState('')
   const keyword = useDeferredValue(text)
 
-  const { data: items } = useQuery({
+  const { data: items, isFetching } = useQuery({
     queryKey: ['passwords'],
     queryFn: () => getItems()
   })
@@ -42,6 +43,8 @@ export default function ListPage() {
           <Button type="primary">Add</Button>
         </Link>
       </header>
+
+      {isFetching && <LoadingView />}
 
       <ul className="mt-4 grid gap-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
         {list.map((item) => (

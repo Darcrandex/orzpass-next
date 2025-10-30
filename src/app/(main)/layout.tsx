@@ -1,6 +1,7 @@
 'use client'
 
 import { getUserInfo } from '@/actions/user'
+import LoadingView from '@/components/LoadingView'
 import NavItem from '@/components/NavItem'
 import { useQuery } from '@tanstack/react-query'
 import { Avatar } from 'antd'
@@ -25,7 +26,7 @@ export default function HomeLayout({ children }: PropsWithChildren) {
   })
 
   if (!isFetched) {
-    return <p className="mt-12 text-center">Loading...</p>
+    return <LoadingView className="mt-12" />
   }
 
   if (isError) {

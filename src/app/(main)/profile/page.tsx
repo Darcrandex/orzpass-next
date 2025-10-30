@@ -2,6 +2,7 @@
 
 import { getUserInfo, updateUser, updateUserPassword } from '@/actions/user'
 import AvatarForm from '@/components/AvatarForm'
+import LoadingView from '@/components/LoadingView'
 import ProfileForm from '@/components/ProfileForm'
 import UserPasswordForm from '@/components/UserPasswordForm'
 import { useQuery } from '@tanstack/react-query'
@@ -15,7 +16,7 @@ export default function Profile() {
   })
 
   if (!isFetched || isNil(user)) {
-    return <p className="mt-12 text-center">Loading...</p>
+    return <LoadingView className="mt-12" />
   }
 
   return (
